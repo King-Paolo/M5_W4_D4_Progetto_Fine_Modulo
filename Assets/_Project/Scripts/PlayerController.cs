@@ -17,11 +17,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Input.GetMouseButtonDown(1))
         {
-            _agent.SetDestination(hit.point);
+            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                _agent.SetDestination(hit.point);
+            }
         }
     }
 }
