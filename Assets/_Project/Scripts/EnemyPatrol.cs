@@ -3,22 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class EnemyPatrol : EnemyFSMController
 {
-    [SerializeField] NavMeshAgent _enemyAgent;
     [SerializeField] Transform[] _pathPoints;
 
     private int _currentPos;
 
-    private void Start()
-    {
-        _enemyAgent = GetComponent<NavMeshAgent>();
-        StartCoroutine(PathRoll());
-    }
 
-    IEnumerator PathRoll()
+    IEnumerator Patrol()
     {
-        while (true)
+        while (_state == STATE.PATROL)
         {
             if (_pathPoints == null || _pathPoints.Length == 0)
             {
@@ -28,9 +22,9 @@ public class EnemyController : MonoBehaviour
             if (_currentPos >= _pathPoints.Length)
                 _currentPos = 0;
 
-            _enemyAgent.SetDestination(_pathPoints[_currentPos].position);
+            _agent.SetDestination(_pathPoints[_currentPos].position);
 
-            while (_enemyAgent.pathPending || _enemyAgent.remainingDistance > _enemyAgent.stoppingDistance)
+            while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
             {
                 yield return null;
             }
@@ -38,6 +32,15 @@ public class EnemyController : MonoBehaviour
             yield return new WaitForSeconds(5f);
 
             _currentPos++;
+        }
+    }
+
+    public override void PatrolUpdate()
+    {
+        if (!_isPatrolling)
+        {
+            StartCoroutine(Patrol());
+            _isPatrolling = true;
         }
     }
 }
