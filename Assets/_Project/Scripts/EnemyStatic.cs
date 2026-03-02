@@ -4,18 +4,49 @@ using UnityEngine;
 
 public class EnemyStatic : EnemyFSMController
 {
-  [SerializeField] private float _rotationSpeed;
+    [SerializeField] private float _rotationSpeed;
+    [SerializeField] private float _maxAngle;
+    [SerializeField] private float _waitTime;
 
-    private float _currentAngle = 0;
-    private float _maxAngle = 90;
-    public override void PatrolUpdate()
+    private Quaternion _startRotation;
+    private Quaternion _targetRotation;
+    [SerializeField] private Transform _startPosition;
+    private Coroutine _patrolCoroutine;
+
+    private void Start()
     {
+        _startRotation = transform.rotation;
+    }
+
+    protected override void PatrolUpdate()
+    {
+        base.PatrolUpdate();
+
+        if (_patrolCoroutine == null)
         {
-            if (!_isPatrolling)
-            {
-                StartCoroutine(StaticPatrol());
-                _isPatrolling = true;
-            }
+            _targetRotation = _startRotation * Quaternion.Euler(0, _maxAngle, 0);
+
+            _agent.ResetPath();
+            _agent.SetDestination(_startPosition.position);
+            _patrolCoroutine = StartCoroutine(StaticPatrol());
+
+            //_agent.speed = _currentSpeed;
+        }
+
+        //if (state == STATE.CHASE)
+        //{
+        //    _agent.speed = _currentSpeed * 2;
+        //}
+    }
+
+    protected override void ChaseUpdate()
+    {
+        base.ChaseUpdate();
+
+        if (_patrolCoroutine != null)
+        {
+            StopCoroutine(_patrolCoroutine);
+            _patrolCoroutine = null;
         }
     }
 
@@ -23,23 +54,23 @@ public class EnemyStatic : EnemyFSMController
     {
         while (_state == STATE.PATROL)
         {
-            while (_currentAngle < _maxAngle)
+
+            while (Quaternion.Angle(transform.rotation, _targetRotation) > 0.01f)
             {
-                float angle = _rotationSpeed * Time.deltaTime;
-                transform.Rotate(0, angle, 0);
-                _currentAngle += angle;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, _targetRotation, _rotationSpeed * Time.deltaTime);
+
+                yield return null;
+
             }
+            yield return new WaitForSeconds(_waitTime);
 
-            yield return new WaitForSeconds(5f);
-
-            while( _currentAngle > 0)
+            while (Quaternion.Angle(transform.rotation, _startRotation) > 0.01f)
             {
-                float angle = (_rotationSpeed * Time.deltaTime);
-                transform.Rotate(0, -angle, 0);
-                _currentAngle -= angle;
-            }
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, _startRotation, _rotationSpeed * Time.deltaTime);
 
-            yield return new WaitForSeconds(5f);
+                yield return null;
+            }
+            yield return new WaitForSeconds(_waitTime);
         }
     }
 }

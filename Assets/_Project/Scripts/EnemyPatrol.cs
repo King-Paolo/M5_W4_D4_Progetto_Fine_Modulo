@@ -6,7 +6,9 @@ using UnityEngine.AI;
 public class EnemyPatrol : EnemyFSMController
 {
     [SerializeField] Transform[] _pathPoints;
+    [SerializeField] private float _waitTime;
 
+    private Coroutine _patrolCoroutine;
     private int _currentPos;
 
 
@@ -29,18 +31,53 @@ public class EnemyPatrol : EnemyFSMController
                 yield return null;
             }
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(_waitTime);
 
             _currentPos++;
         }
     }
 
-    public override void PatrolUpdate()
+    protected override void PatrolUpdate()
     {
-        if (!_isPatrolling)
+        base.PatrolUpdate();
+
+        if (_patrolCoroutine == null /*&& _state == STATE.PATROL*/)
         {
-            StartCoroutine(Patrol());
-            _isPatrolling = true;
+            _patrolCoroutine = StartCoroutine(Patrol());
+            //_agent.speed = _currentSpeed;
         }
     }
+
+    protected override void ChaseUpdate()
+    {
+        base.ChaseUpdate();
+
+        if (_patrolCoroutine != null)
+        {
+            StopCoroutine(_patrolCoroutine);
+            _patrolCoroutine = null;
+        }
+    }
+    //protected override void OnEnterState(STATE state)
+    //{
+    //    if (state == STATE.PATROL)
+    //    {
+    //        _patrolCoroutine = StartCoroutine(Patrol());
+    //        _agent.speed = _currentSpeed;
+    //    }
+
+    //    if (state == STATE.CHASE)
+    //    {
+    //        _agent.speed = _currentSpeed * 2;
+    //    }
+    //}
+
+    //protected override void OnExitState(STATE state)
+    //{
+    //    if (state != STATE.PATROL && _patrolCoroutine != null)
+    //    {
+    //        StopCoroutine(_patrolCoroutine);
+    //        _patrolCoroutine = null;
+    //    }
+    //}
 }
