@@ -26,7 +26,7 @@ public class EnemyStatic : EnemyFSMController
         {
             _targetRotation = _startRotation * Quaternion.Euler(0, _maxAngle, 0);
 
-            _agent.ResetPath();
+            //_agent.ResetPath();
             _agent.SetDestination(_startPosition.position);
             _patrolCoroutine = StartCoroutine(StaticPatrol());
 

@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] NavMeshAgent _agent;
 
     private Camera _cam;
+    private float _currentSpeed = 3.5f;
+    private float _escapeSpeed = 7;
 
     private void Start()
     {
@@ -17,6 +19,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _agent.speed = _escapeSpeed;
+        }
+        else
+        {
+            _agent.speed = _currentSpeed;
+        }
+
+
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
