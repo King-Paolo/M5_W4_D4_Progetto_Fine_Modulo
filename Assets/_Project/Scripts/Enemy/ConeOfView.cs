@@ -11,6 +11,10 @@ public class ConeOfView : MonoBehaviour
 
     private float _viewAngle = 45;
 
+    private void Update()
+    {
+        DrawConeOfView();
+    }
     public void DrawConeOfView()
     {
         _lineRenderer.positionCount = _segments + 1;
@@ -19,7 +23,7 @@ public class ConeOfView : MonoBehaviour
 
         Vector3 startingLine = _pov.position;
         Vector3 startingRaycast = _pov.position;
-        Vector3 forward = transform.forward;
+        Vector3 forward = _pov.forward;
 
         _lineRenderer.SetPosition(0, startingLine);
 
@@ -40,6 +44,12 @@ public class ConeOfView : MonoBehaviour
         }
     }
 
+    public void SetColor(Color color)
+    {
+        _lineRenderer.startColor = color;
+        _lineRenderer.endColor = color;
+    }
+
     private void OnDrawGizmos()
     {
         if (_pov == null) return;
@@ -49,10 +59,10 @@ public class ConeOfView : MonoBehaviour
         Vector3 origin = _pov.position;
         float step = (_viewAngle * 2) / _segments;
 
-        for (int i = 0; i <= _segments; i++)
+        for (int i = 0; i < _segments; i++)
         {
             float angle = -_viewAngle + step * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * _pov.forward;
 
             Gizmos.DrawRay(origin, direction *  _viewRange);
         }

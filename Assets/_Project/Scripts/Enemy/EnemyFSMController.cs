@@ -10,41 +10,31 @@ public class EnemyFSMController : MonoBehaviour
     [SerializeField] protected STATE _state;
     [SerializeField] protected Transform _target;
     [SerializeField] protected Transform _pov;
-    [SerializeField] protected float _viewRange;
+    [SerializeField] private float _viewRange;
     [SerializeField] private float _viewAngle;
 
     protected NavMeshAgent _agent;
-    protected STATE _currentState;
 
     private float _patrolSpeed = 3.5f;
     private float _chasingSpeed = 7f;
     private float _patrolStoppingDistance = 0;
-    private float _chasingStoppingDistance = 1f;
+    private float _chasingStoppingDistance = 1.2f;
     private float _detectionTime = 1.5f;
     private float _detectionTimer;
     private float _escapeTime = 2.5f;
     private float _escapeTimer;
+    private ConeOfView _cov;
 
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
-    }
-
-    private void Start()
-    {
-        //_currentState = _state;
-        //OnEnterState(_state);
+        _cov = GetComponent<ConeOfView>();
     }
 
     private void Update()
     {
-        //if (_state != _currentState)
-        //{
-        //    OnExitState(_currentState);
-        //    OnEnterState(_state);
-        //    _currentState = _state;
-        //}
         CheckTransition();
+        ChangeColorState();
 
         switch (_state)
         {
@@ -69,8 +59,7 @@ public class EnemyFSMController : MonoBehaviour
         _agent.speed = _patrolSpeed;
         _agent.stoppingDistance = _patrolStoppingDistance;
     }
-    //protected virtual void OnEnterState(STATE state) { }
-    //protected virtual void OnExitState(STATE state) { }
+
     private void CheckTransition()
     {
         if(CanSeePlayer() && _state == STATE.PATROL)
@@ -114,7 +103,24 @@ public class EnemyFSMController : MonoBehaviour
         {
             return hit.collider.CompareTag("Player");
         }
-
         return false;
+    }
+
+    private void ChangeColorState()
+    {
+        if (_state == STATE.CHASE)
+        {
+            _cov.SetColor(Color.red);
+            return;
+        }
+
+        if (CanSeePlayer())
+        {
+            _cov.SetColor(Color.yellow);
+        }
+        else
+        {
+            _cov.SetColor(Color.green);
+        }
     }
 }

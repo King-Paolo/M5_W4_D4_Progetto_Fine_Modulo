@@ -7,10 +7,10 @@ public class EnemyStatic : EnemyFSMController
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _maxAngle;
     [SerializeField] private float _waitTime;
+    [SerializeField] private Transform _startPosition;
 
     private Quaternion _startRotation;
-    private Quaternion _targetRotation;
-    [SerializeField] private Transform _startPosition;
+    private Quaternion _targetRotation; 
     private Coroutine _patrolCoroutine;
 
     private void Start()
@@ -26,17 +26,9 @@ public class EnemyStatic : EnemyFSMController
         {
             _targetRotation = _startRotation * Quaternion.Euler(0, _maxAngle, 0);
 
-            //_agent.ResetPath();
             _agent.SetDestination(_startPosition.position);
             _patrolCoroutine = StartCoroutine(StaticPatrol());
-
-            //_agent.speed = _currentSpeed;
         }
-
-        //if (state == STATE.CHASE)
-        //{
-        //    _agent.speed = _currentSpeed * 2;
-        //}
     }
 
     protected override void ChaseUpdate()

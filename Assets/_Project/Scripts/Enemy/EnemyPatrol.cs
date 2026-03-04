@@ -41,10 +41,9 @@ public class EnemyPatrol : EnemyFSMController
     {
         base.PatrolUpdate();
 
-        if (_patrolCoroutine == null /*&& _state == STATE.PATROL*/)
+        if (_patrolCoroutine == null)
         {
             _patrolCoroutine = StartCoroutine(Patrol());
-            //_agent.speed = _currentSpeed;
         }
     }
 
@@ -58,26 +57,4 @@ public class EnemyPatrol : EnemyFSMController
             _patrolCoroutine = null;
         }
     }
-    //protected override void OnEnterState(STATE state)
-    //{
-    //    if (state == STATE.PATROL)
-    //    {
-    //        _patrolCoroutine = StartCoroutine(Patrol());
-    //        _agent.speed = _currentSpeed;
-    //    }
-
-    //    if (state == STATE.CHASE)
-    //    {
-    //        _agent.speed = _currentSpeed * 2;
-    //    }
-    //}
-
-    //protected override void OnExitState(STATE state)
-    //{
-    //    if (state != STATE.PATROL && _patrolCoroutine != null)
-    //    {
-    //        StopCoroutine(_patrolCoroutine);
-    //        _patrolCoroutine = null;
-    //    }
-    //}
 }
