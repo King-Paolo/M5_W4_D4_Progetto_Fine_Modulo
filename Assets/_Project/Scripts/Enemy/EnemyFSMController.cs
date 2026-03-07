@@ -19,7 +19,7 @@ public class EnemyFSMController : MonoBehaviour
     private float _chasingSpeed = 7f;
     private float _patrolStoppingDistance = 0;
     private float _chasingStoppingDistance = 1.2f;
-    private float _detectionTime = 1.5f;
+    private float _detectionTime = 1f;
     private float _detectionTimer;
     private float _escapeTime = 2.5f;
     private float _escapeTimer;
