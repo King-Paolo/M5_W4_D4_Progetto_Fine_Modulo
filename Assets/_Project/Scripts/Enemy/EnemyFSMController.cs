@@ -48,6 +48,16 @@ public class EnemyFSMController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        if (_state == STATE.CHASE)
+        {
+            GameManager.Instance.GameOver();
+        }
+    }
+
     protected virtual void ChaseUpdate()
     {
         _agent.SetDestination(_target.position);
