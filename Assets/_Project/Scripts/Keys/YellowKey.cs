@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class YellowKey : Keys
 {
+    [SerializeField] private SO_KeysItem _keyID;
+
     public static event Action OnYellowKeyEquipped;
     protected override void OnTriggerEnter(Collider other)
     {
@@ -14,7 +16,7 @@ public class YellowKey : Keys
 
         if (inventory != null)
         {
-            inventory.YellowKeyIsEquipped = true;
+            inventory.Keys.Add(_keyID);
         }
 
         OnYellowKeyEquipped?.Invoke();

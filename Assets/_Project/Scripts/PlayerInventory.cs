@@ -4,8 +4,5 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public bool GreenKeyIsEquipped { get; set; }
-    public bool YellowKeyIsEquipped { get; set; }
-    public bool BlueKeyIsEquipped { get; set; }
-
+    public List<SO_KeysItem> Keys;
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BlueKey : Keys
 {
+    [SerializeField] private SO_KeysItem _keyID;
+
     public static event Action OnBlueKeyEquipped;
     protected override void OnTriggerEnter(Collider other)
     {
@@ -14,7 +16,7 @@ public class BlueKey : Keys
 
         if (inventory != null)
         {
-            inventory.BlueKeyIsEquipped = true;
+            inventory.Keys.Add(_keyID);
         }
 
         OnBlueKeyEquipped?.Invoke();

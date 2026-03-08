@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Lever : MonoBehaviour
 {
+    [SerializeField] GameObject _interactMenu;
+
     public static event Action OnLeverPulled;
 
     private Animator _anim;
@@ -18,28 +20,34 @@ public class Lever : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player") || _isPlayerInRange) return;
+
+        _isPlayerInRange = true;
+
+        if (!_isLeverPulled)
         {
-            _isPlayerInRange = true;
+            MenuManager.Instance.ShowMenu(_interactMenu, true);
         }
+
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            _isPlayerInRange = false;
-        }
+        if (!other.CompareTag("Player")) return;
+
+        _isPlayerInRange = false;
+        MenuManager.Instance.ShowMenu(_interactMenu, false);
     }
 
     private void Update()
     {
-        if (_isLeverPulled) return;
+        if (_isLeverPulled || !_isPlayerInRange) return;
 
-        if (_isPlayerInRange && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             _anim.SetTrigger("Pull");
             OnLeverPulled?.Invoke();
             _isLeverPulled = true;
+            MenuManager.Instance.ShowMenu(_interactMenu, false);
         }
     }
 }

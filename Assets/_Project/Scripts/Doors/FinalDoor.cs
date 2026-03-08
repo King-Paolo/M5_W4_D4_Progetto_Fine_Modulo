@@ -5,14 +5,11 @@ using UnityEngine;
 
 public class FinalDoor : MonoBehaviour
 {
-    [SerializeField] private NavMeshSurface _navMeshSurface;
-
     Animator anim;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
-        //_navMeshSurface = GetComponentInParent<NavMeshSurface>();
     }
 
     private void OnEnable()
@@ -28,6 +25,5 @@ public class FinalDoor : MonoBehaviour
     public void OpenDoor()
     {
         anim.SetTrigger("Open");
-        _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GreenKey : Keys
 {
+    [SerializeField] private SO_KeysItem _keyID;
+
     public static event Action OnGreenKeyEquipped;
     protected override void OnTriggerEnter(Collider other)
     {
@@ -14,7 +16,7 @@ public class GreenKey : Keys
 
         if (inventory != null)
         {
-            inventory.GreenKeyIsEquipped = true;
+            inventory.Keys.Add(_keyID);
         }
 
         OnGreenKeyEquipped?.Invoke();

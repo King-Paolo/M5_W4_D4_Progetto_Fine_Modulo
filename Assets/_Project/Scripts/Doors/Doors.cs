@@ -5,37 +5,38 @@ using UnityEngine;
 
 public class Doors : MonoBehaviour
 {
-    [SerializeField] private NavMeshSurface _navMeshSurface;
+    [SerializeField] private int _keyIDNeeded;
 
     private Animator _anim;
-    protected bool _playerInRange;
-    protected PlayerInventory _inventory;
+    private bool _doorIsOpen;
 
     private void Awake()
     {
         _anim = GetComponent<Animator>();
-        //_navMeshSurface = GetComponentInParent<NavMeshSurface>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag("Player") || _doorIsOpen) return;
 
-        _inventory = other.GetComponentInParent<PlayerInventory>();
-        _playerInRange = true;
+        PlayerInventory inventory = other.GetComponentInParent<PlayerInventory>();
+
+        OpenDoor(inventory);
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OpenDoor(PlayerInventory inventory)
     {
-        if (!other.CompareTag("Player")) return;
+        if (inventory == null) return;
+        
+        var key = inventory.Keys.Find(t => t.ItemID == _keyIDNeeded);
 
-        _playerInRange = false;
-        _inventory = null;
-    }
-
-    public void OpenDoor()
-    {
-        _anim.SetTrigger("Open");
-        _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
+        if (key != null)
+        {
+            _anim.SetTrigger("Open");
+            _doorIsOpen = true;
+            inventory.Keys.Remove(key);
+        }
+        else
+            return;
     }
 }
