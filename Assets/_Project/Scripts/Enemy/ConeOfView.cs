@@ -64,7 +64,7 @@ public class ConeOfView : MonoBehaviour
             float angle = -_viewAngle + step * i;
             Vector3 direction = Quaternion.Euler(0, angle, 0) * _pov.forward;
 
-            Gizmos.DrawRay(origin, direction *  _viewRange);
+            Gizmos.DrawRay(origin, direction * _viewRange);
         }
     }
 }

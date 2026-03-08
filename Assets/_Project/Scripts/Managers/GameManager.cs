@@ -8,13 +8,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField] private AudioClip _backgroundMusic;
-    [SerializeField] private AudioClip _gameOverMusic;
     [SerializeField] private AudioClip _victoryMusic;
     [SerializeField] private GameObject _pauseMenu;
     [SerializeField] private GameObject _gameOverMenu;
     [SerializeField] private GameObject _victoryMenu;
 
     private bool _isPaused;
+    private bool _gameEnded;
 
     private void Awake()
     {
@@ -30,10 +30,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         AudioManager.Instance.PlayMusic(_backgroundMusic);
+        Time.timeScale = 1f;
     }
 
     private void Update()
     {
+        if (_gameEnded) return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (_isPaused) Resume();
@@ -43,7 +46,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayGame()
     {
-
         SceneManager.LoadScene(1);
         Time.timeScale = 1;
     }
@@ -71,14 +73,15 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         MenuManager.Instance.GameOverMenu(_gameOverMenu);
-        AudioManager.Instance.PlayMusic(_gameOverMusic);
         Time.timeScale = 0;
+        _gameEnded = true;
     }
 
     public void Victory()
     {
         MenuManager.Instance.VictoryMenu(_victoryMenu);
-        AudioManager.Instance.PlayMusic(_victoryMusic);
+        AudioManager.Instance.PlayMusicOneShot(_victoryMusic);
         Time.timeScale = 0;
+        _gameEnded = true;
     }
 }

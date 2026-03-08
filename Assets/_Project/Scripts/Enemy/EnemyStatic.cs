@@ -10,7 +10,7 @@ public class EnemyStatic : EnemyFSMController
     [SerializeField] private Transform _startPosition;
 
     private Quaternion _startRotation;
-    private Quaternion _targetRotation; 
+    private Quaternion _targetRotation;
     private Coroutine _patrolCoroutine;
 
     private void Start()

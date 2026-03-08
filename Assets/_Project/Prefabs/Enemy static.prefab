@@ -213,7 +213,7 @@ MonoBehaviour:
   _state: 0
   _target: {fileID: 0}
   _pov: {fileID: 3074773907464668867}
-  _viewRange: 8
+  _viewRange: 10
   _viewAngle: 45
   _rotationSpeed: 50
   _maxAngle: 90
@@ -234,7 +234,7 @@ MonoBehaviour:
   _lineRenderer: {fileID: 2691509281021852319}
   _pov: {fileID: 3074773907464668867}
   _segments: 14
-  _viewRange: 8
+  _viewRange: 10
 --- !u!120 &2691509281021852319
 LineRenderer:
   serializedVersion: 2

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,10 +17,10 @@ public class EnemyFSMController : MonoBehaviour
     protected NavMeshAgent _agent;
 
     private float _patrolSpeed = 3.5f;
-    private float _chasingSpeed = 7f;
+    private float _chasingSpeed = 6f;
     private float _patrolStoppingDistance = 0;
     private float _chasingStoppingDistance = 1.2f;
-    private float _detectionTime = 1f;
+    private float _detectionTime = 0.5f;
     private float _detectionTimer;
     private float _escapeTime = 2.5f;
     private float _escapeTimer;
@@ -36,6 +37,16 @@ public class EnemyFSMController : MonoBehaviour
         CheckTransition();
         ChangeColorState();
 
+        if (_state == STATE.CHASE)
+        {
+            float distance = Vector3.Distance(transform.position, _target.position);
+
+            if (distance <= _chasingStoppingDistance)
+            {
+                GameManager.Instance.GameOver();
+            }
+        }
+
         switch (_state)
         {
             case STATE.PATROL:
@@ -45,16 +56,6 @@ public class EnemyFSMController : MonoBehaviour
             case STATE.CHASE:
                 ChaseUpdate();
                 break;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!collision.gameObject.CompareTag("Player")) return;
-
-        if (_state == STATE.CHASE)
-        {
-            GameManager.Instance.GameOver();
         }
     }
 
@@ -72,24 +73,24 @@ public class EnemyFSMController : MonoBehaviour
 
     private void CheckTransition()
     {
-        if(CanSeePlayer() && _state == STATE.PATROL)
+        if (CanSeePlayer() && _state == STATE.PATROL)
         {
             _escapeTimer = 0;
             _detectionTimer += Time.deltaTime;
 
-            if(_detectionTimer > _detectionTime)
+            if (_detectionTimer > _detectionTime)
             {
                 _state = STATE.CHASE;
                 _detectionTimer = 0;
             }
         }
 
-        if(!CanSeePlayer() && _state == STATE.CHASE)
+        if (!CanSeePlayer() && _state == STATE.CHASE)
         {
             _detectionTimer = 0;
             _escapeTimer += Time.deltaTime;
 
-            if(_escapeTimer > _escapeTime)
+            if (_escapeTimer > _escapeTime)
             {
                 _state = STATE.PATROL;
                 _escapeTimer = 0;
@@ -106,10 +107,10 @@ public class EnemyFSMController : MonoBehaviour
 
         float Angle = Vector3.Angle(_pov.forward, direction);
 
-        if(Angle > _viewAngle)
+        if (Angle > _viewAngle)
             return false;
 
-        if(Physics.Raycast(_pov.position, direction.normalized, out RaycastHit hit, _viewRange))
+        if (Physics.Raycast(_pov.position, direction.normalized, out RaycastHit hit, _viewRange))
         {
             return hit.collider.CompareTag("Player");
         }

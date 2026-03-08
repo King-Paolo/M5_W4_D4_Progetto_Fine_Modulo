@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation;
 using UnityEngine;
 
 public class Doors : MonoBehaviour
@@ -27,7 +26,7 @@ public class Doors : MonoBehaviour
     private void OpenDoor(PlayerInventory inventory)
     {
         if (inventory == null) return;
-        
+
         var key = inventory.Keys.Find(t => t.ItemID == _keyIDNeeded);
 
         if (key != null)

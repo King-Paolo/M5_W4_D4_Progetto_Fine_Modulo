@@ -24,16 +24,18 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySFX(AudioClip clip)
+    public void PlayMusicOneShot(AudioClip clip)
     {
         if (clip == null) return;
 
+        _audioSource.clip = clip;
+        _audioSource.loop = false;
         _audioSource.Play();
     }
 
     public void PlayMusic(AudioClip clip)
     {
-        if( clip == null) return;
+        if (clip == null) return;
 
         _audioSource.clip = clip;
         _audioSource.loop = true;

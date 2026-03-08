@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -28,7 +27,7 @@ public class MenuManager : MonoBehaviour
 
     public void VictoryMenu(GameObject menu)
     {
-        if(menu != null)
+        if (menu != null)
         {
             menu.SetActive(true);
         }
